@@ -88,8 +88,8 @@ The repository is organized into the following directories:
 ### `/wezterm`
 
 - [Installation and Documentation](https://github.com/drewgrif/butterscripts/tree/main/wezterm)
-- **butterwez**: Installs wezterm and creates configuration directory.
-- **wezterm.lua**: Curated lua configuration file for wezterm
+- **install_wezterm.sh**: Installs WezTerm terminal emulator from official repository
+- **wezterm.lua**: Curated lua configuration file for WezTerm
 
 ---
 
