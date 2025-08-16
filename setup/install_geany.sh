@@ -41,8 +41,9 @@ ask_yes_no() {
 
 # Function to install Geany from APT
 install_geany_apt() {
-    echo -e "${CYAN}Installing Geany 2.0 from APT repositories...${NC}"
-    echo -e "${YELLOW}This will install the stable Debian 13 package version.${NC}"
+    echo -e "${CYAN}Installing Geany from APT repositories...${NC}"
+    echo -e "${YELLOW}This will install the stable Debian package version.${NC}"
+    echo -e "${YELLOW}Version 2.0 on Debian 13 (Trixie), 1.38 on Debian 12 (Bookworm)${NC}"
     echo
     
     # Update package lists
@@ -53,8 +54,9 @@ install_geany_apt() {
     echo -e "${YELLOW}Installing Geany and plugins...${NC}"
     sudo apt install -y geany geany-plugins
     
-    echo -e "${GREEN}Geany 2.0 installation completed!${NC}"
+    echo -e "${GREEN}Geany installation completed!${NC}"
     echo -e "${YELLOW}Geany has been installed from APT packages.${NC}"
+    echo -e "${YELLOW}All plugins including markdown preview should work correctly.${NC}"
     
     # Ask about applying config
     echo
@@ -69,59 +71,109 @@ install_geany_source() {
     echo -e "${YELLOW}This will compile the latest version with all features.${NC}"
     echo
 
-# Install build dependencies
-if command -v apt &> /dev/null; then
-    sudo apt update
-    sudo apt install -y build-essential autoconf automake libtool intltool \
-        libgtk-3-dev libxml2-dev libxml2-utils python3-docutils \
-        python3-lxml rst2pdf git meson ninja-build \
-        libglib2.0-dev libgirepository1.0-dev \
-        libenchant-2-dev libgit2-dev libgpgme-dev libsoup2.4-dev \
-        libctpl-dev libmarkdown2-dev libwebkit2gtk-4.0-dev \
-        check cppcheck valac
-elif command -v dnf &> /dev/null; then
-    sudo dnf groupinstall -y "Development Tools"
-    sudo dnf install -y gtk3-devel intltool python3-docutils \
-        glib2-devel gobject-introspection-devel \
-        enchant2-devel libgit2-devel gpgme-devel libsoup-devel \
-        ctpl-devel libmarkdown-devel webkit2gtk3-devel \
-        check cppcheck vala meson ninja-build
-else
-    echo "Unsupported package manager"
-    exit 1
-fi
+    # Install build dependencies
+    echo -e "${YELLOW}Installing build dependencies...${NC}"
+    if command -v apt &> /dev/null; then
+        sudo apt update
+        sudo apt install -y build-essential autoconf automake libtool intltool \
+            libgtk-3-dev libxml2-dev libxml2-utils python3-docutils \
+            python3-lxml rst2pdf git meson ninja-build \
+            libglib2.0-dev libgirepository1.0-dev \
+            libenchant-2-dev libgit2-dev libgpgme-dev libsoup2.4-dev \
+            libctpl-dev libmarkdown2-dev libwebkit2gtk-4.1-dev \
+            check cppcheck valac
+    elif command -v dnf &> /dev/null; then
+        sudo dnf groupinstall -y "Development Tools"
+        sudo dnf install -y gtk3-devel intltool python3-docutils \
+            glib2-devel gobject-introspection-devel \
+            enchant2-devel libgit2-devel gpgme-devel libsoup-devel \
+            ctpl-devel libmarkdown-devel webkit2gtk3-devel \
+            check cppcheck vala meson ninja-build
+    else
+        echo -e "${RED}Error: Unsupported package manager${NC}"
+        exit 1
+    fi
 
-# Build Geany
-BUILD_DIR="$HOME/build-geany-${GEANY_VERSION}"
-mkdir -p "$BUILD_DIR"
-cd "$BUILD_DIR"
-
-wget -q --show-progress "https://download.geany.org/geany-${GEANY_VERSION}.tar.bz2"
-tar -xjf "geany-${GEANY_VERSION}.tar.bz2"
-cd "geany-${GEANY_VERSION}"
-
-./configure --prefix="$HOME/.local" --enable-gtk3
-make -j$(nproc)
-make install
-
-# Build plugins
-cd "$BUILD_DIR"
-wget -q --show-progress "https://plugins.geany.org/geany-plugins/geany-plugins-${GEANY_PLUGINS_VERSION}.tar.bz2" || \
-    wget -q --show-progress "https://github.com/geany/geany-plugins/releases/download/${GEANY_PLUGINS_VERSION}/geany-plugins-${GEANY_PLUGINS_VERSION}.tar.bz2"
-
-if [ -f "geany-plugins-${GEANY_PLUGINS_VERSION}.tar.bz2" ]; then
-    tar -xjf "geany-plugins-${GEANY_PLUGINS_VERSION}.tar.bz2"
-    cd "geany-plugins-${GEANY_PLUGINS_VERSION}"
+    # Build Geany
+    BUILD_DIR="$HOME/build-geany-${GEANY_VERSION}"
+    mkdir -p "$BUILD_DIR"
+    cd "$BUILD_DIR"
     
-    export PKG_CONFIG_PATH="$HOME/.local/lib/pkgconfig:$PKG_CONFIG_PATH"
-    ./configure --prefix="$HOME/.local" --with-geany-libdir="$HOME/.local/lib"
-    make -j$(nproc)
-    make install
-fi
+    # Download with error handling
+    echo -e "${YELLOW}Downloading Geany ${GEANY_VERSION}...${NC}"
+    if ! wget -q --show-progress "https://download.geany.org/geany-${GEANY_VERSION}.tar.bz2"; then
+        echo -e "${RED}Failed to download Geany source${NC}"
+        cd "$HOME"
+        rm -rf "$BUILD_DIR"
+        exit 1
+    fi
+    
+    echo -e "${YELLOW}Extracting source...${NC}"
+    tar -xjf "geany-${GEANY_VERSION}.tar.bz2"
+    cd "geany-${GEANY_VERSION}"
+    
+    echo -e "${YELLOW}Configuring build...${NC}"
+    if ! ./configure --prefix="$HOME/.local" --enable-gtk3; then
+        echo -e "${RED}Configuration failed${NC}"
+        cd "$HOME"
+        rm -rf "$BUILD_DIR"
+        exit 1
+    fi
+    
+    echo -e "${YELLOW}Building Geany (this may take a few minutes)...${NC}"
+    if ! make -j$(nproc); then
+        echo -e "${RED}Build failed${NC}"
+        cd "$HOME"
+        rm -rf "$BUILD_DIR"
+        exit 1
+    fi
+    
+    echo -e "${YELLOW}Installing Geany to ~/.local...${NC}"
+    if ! make install; then
+        echo -e "${RED}Installation failed${NC}"
+        cd "$HOME"
+        rm -rf "$BUILD_DIR"
+        exit 1
+    fi
 
-# Create desktop file
-DESKTOP_DIR="$HOME/.local/share/applications"
-mkdir -p "$DESKTOP_DIR"
+    # Build plugins
+    echo -e "${YELLOW}Building Geany plugins...${NC}"
+    cd "$BUILD_DIR"
+    
+    # Try multiple download sources
+    echo -e "${YELLOW}Downloading Geany plugins ${GEANY_PLUGINS_VERSION}...${NC}"
+    if ! wget -q --show-progress "https://plugins.geany.org/geany-plugins/geany-plugins-${GEANY_PLUGINS_VERSION}.tar.bz2"; then
+        echo -e "${YELLOW}Trying alternate download source...${NC}"
+        if ! wget -q --show-progress "https://github.com/geany/geany-plugins/releases/download/${GEANY_PLUGINS_VERSION}/geany-plugins-${GEANY_PLUGINS_VERSION}.tar.bz2"; then
+            echo -e "${YELLOW}Warning: Could not download plugins. Continuing without plugins...${NC}"
+        fi
+    fi
+    
+    if [ -f "geany-plugins-${GEANY_PLUGINS_VERSION}.tar.bz2" ]; then
+        echo -e "${YELLOW}Extracting plugins...${NC}"
+        tar -xjf "geany-plugins-${GEANY_PLUGINS_VERSION}.tar.bz2"
+        cd "geany-plugins-${GEANY_PLUGINS_VERSION}"
+        
+        export PKG_CONFIG_PATH="$HOME/.local/lib/pkgconfig:$PKG_CONFIG_PATH"
+        
+        echo -e "${YELLOW}Configuring plugins build...${NC}"
+        if ./configure --prefix="$HOME/.local" --with-geany-libdir="$HOME/.local/lib"; then
+            echo -e "${YELLOW}Building plugins (this may take a few minutes)...${NC}"
+            if make -j$(nproc); then
+                echo -e "${YELLOW}Installing plugins...${NC}"
+                make install
+            else
+                echo -e "${YELLOW}Warning: Plugin build failed. Continuing without plugins...${NC}"
+            fi
+        else
+            echo -e "${YELLOW}Warning: Plugin configuration failed. Continuing without plugins...${NC}"
+        fi
+    fi
+
+    # Create desktop file
+    echo -e "${YELLOW}Creating desktop entry...${NC}"
+    DESKTOP_DIR="$HOME/.local/share/applications"
+    mkdir -p "$DESKTOP_DIR"
 
 if command -v /usr/bin/geany &> /dev/null; then
     cat > "$DESKTOP_DIR/geany-2.1.desktop" << EOF
@@ -157,25 +209,30 @@ Keywords=Text;Editor;
 EOF
 fi
 
-# Clean up
-cd "$HOME"
-rm -rf "$BUILD_DIR"
+    # Clean up
+    echo -e "${YELLOW}Cleaning up build files...${NC}"
+    cd "$HOME"
+    rm -rf "$BUILD_DIR"
 
-# Create system-wide symlink
-[ ! -e /usr/local/bin/geany ] && sudo ln -s "$HOME/.local/bin/geany" /usr/local/bin/geany
+    # Create system-wide symlink
+    if [ ! -e /usr/local/bin/geany ]; then
+        echo -e "${YELLOW}Creating system-wide symlink...${NC}"
+        sudo ln -s "$HOME/.local/bin/geany" /usr/local/bin/geany
+    fi
 
-# Update PATH if needed
-if ! echo "$PATH" | grep -q "$HOME/.local/bin"; then
-    echo 'export PATH="$HOME/.local/bin:$PATH"' >> "$HOME/.bashrc"
-fi
+    # Update PATH if needed
+    if ! echo "$PATH" | grep -q "$HOME/.local/bin"; then
+        echo -e "${YELLOW}Adding ~/.local/bin to PATH...${NC}"
+        echo 'export PATH="$HOME/.local/bin:$PATH"' >> "$HOME/.bashrc"
+    fi
 
-echo -e "${GREEN}Geany 2.1 built from source successfully!${NC}"
-
-# Ask about applying config
-echo
-if ask_yes_no "Apply butterscripts configuration?"; then
-    apply_butterscripts_config
-fi
+    echo -e "${GREEN}Geany 2.1 built from source successfully!${NC}"
+    
+    # Ask about applying config
+    echo
+    if ask_yes_no "Apply butterscripts configuration?"; then
+        apply_butterscripts_config
+    fi
 }
 
 # Function to apply butterscripts configuration
@@ -709,15 +766,16 @@ EOF
 show_header
 echo -e "${YELLOW}Choose your Geany installation method:${NC}"
 echo
-echo -e "${CYAN}1.${NC} Install from APT (Geany 2.0 - Stable Debian package)"
-echo -e "   - Quick installation"
-echo -e "   - Automatic updates via APT"
-echo -e "   - Standard plugins included"
+echo -e "${CYAN}1.${NC} Install from APT ${GREEN}(RECOMMENDED)${NC}"
+echo -e "   - Geany 2.0 on Debian 13 (Trixie) / 1.38 on Debian 12"
+echo -e "   - Quick installation with automatic updates"
+echo -e "   - All plugins work correctly (including markdown preview)"
+echo -e "   - Best stability and compatibility"
 echo
 echo -e "${CYAN}2.${NC} Compile from source (Geany 2.1 - Latest version)"
-echo -e "   - Latest features and improvements"
-echo -e "   - All available plugins"
-echo -e "   - Optimized for your system"
+echo -e "   - Newest features (Dart, Docker, Zig language support)"
+echo -e "   - Latest editor improvements"
+echo -e "   ${YELLOW}⚠ Note: Markdown preview may not work on Debian 13${NC}"
 echo
 echo -e "${CYAN}3.${NC} Exit"
 echo
