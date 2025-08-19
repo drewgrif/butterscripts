@@ -62,8 +62,7 @@ install_tools  # Installs fzf and ripgrep
 | `g.` | Go to ~/.config |
 | `gd` | Go to ~/Downloads |
 | `gD` | Go to ~/Documents |
-| `gp` | Go to ~/projects |
-| `gt` | Go to /tmp |
+| `gv` | Go to ~/Videos |
 
 ---
 
@@ -115,9 +114,22 @@ install_tools  # Installs fzf and ripgrep
 |---------|-------------|
 | `calc [expr]` | Quick calculator |
 | `note [text]` | Add/view notes (~/.local/share/notes) |
-| `serve [port]` | Start Python HTTP server |
+| `todo [task]` | Task management (add/list/complete tasks) |
 | `countdown [sec]` | Countdown timer |
 | `sysinfo()` | System information summary |
+
+### Todo Management
+| Command | Description |
+|---------|-------------|
+| `todo` | List active tasks |
+| `todo Buy milk` | Add a new task |
+| `todo done 2` | Mark task #2 as complete |
+| `todo all` | Show all tasks (including completed) |
+| `todo remove 3` | Delete task #3 |
+| `todo clear` | Remove all completed tasks |
+| `todo help` | Show usage help |
+
+Tasks are stored in `~/.local/share/todos/tasks.txt` as simple text.
 
 ---
 

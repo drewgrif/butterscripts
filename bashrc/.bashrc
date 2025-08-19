@@ -97,7 +97,6 @@ PS1="${GRAY}\t ${GREEN}\u${ssh_message} ${WHITE}at ${YELLOW}\h ${WHITE}in ${BLUE
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
-alias .....='cd ../../../..'
 alias ~='cd ~'
 alias -- -='cd -'
 
@@ -150,10 +149,10 @@ alias install='sudo apt install'
 alias search='apt search'
 alias update='sudo apt update'
 alias upgrade='sudo apt update && sudo apt upgrade'
-alias fullupgrade='sudo apt update && sudo apt full-upgrade && sudo apt autoremove --purge'
 alias remove='sudo apt remove'
-alias purge='sudo apt purge'
 alias autoremove='sudo apt autoremove --purge'
+alias fullupgrade='sudo apt update && sudo apt full-upgrade && sudo apt autoremove --purge'
+alias purge='sudo apt purge'
 alias uplist='apt list --upgradable'
 
 # ============================================================================
@@ -173,23 +172,8 @@ alias gpl='git pull'
 alias gco='git checkout'
 alias gb='git branch'
 alias gd='git diff'
-alias gdc='git diff --cached'
 alias gl='git log --oneline --graph --decorate'
-alias gla='git log --oneline --graph --decorate --all'
 alias gclone='git clone'
-alias gsave='git add -A && git commit -m "Quick save $(date +%Y-%m-%d_%H:%M:%S)"'
-
-# Docker (if available)
-if command -v docker >/dev/null 2>&1; then
-    alias d='docker'
-    alias dc='docker-compose'
-    alias dps='docker ps'
-    alias dpsa='docker ps -a'
-    alias dimg='docker images'
-    alias dexec='docker exec -it'
-    alias dlogs='docker logs -f'
-    alias dprune='docker system prune -a'
-fi
 
 
 # ============================================================================
@@ -214,13 +198,13 @@ alias tmuxconf='${EDITOR} ~/.tmux.conf'
 alias g.='cd ~/.config'
 alias gd='cd ~/Downloads'
 alias gD='cd ~/Documents'
-alias gp='cd ~/projects'
-alias gt='cd /tmp'
+alias gv='cd ~/Videos'
 
-# DWM aliases (keeping your originals)
+# DWM aliases
 alias gdw='cd ~/.config/suckless/dwm'
 alias gds='cd ~/.config/suckless/slstatus'
 alias remake='rm config.h && make && sudo make clean install'
+
 
 # ============================================================================
 # ALIASES - UTILITIES
@@ -292,10 +276,6 @@ alias cpu='ps aux | head -1 && ps aux | sort -rnk 3 | head -5'
 
 # Misc
 alias ff='fastfetch || neofetch'
-alias weather='curl wttr.in/thonotosassa?u'
-
-# Notification (keeping your original)
-alias hi='pgrep -x dunst >/dev/null && notify-send "Hi there!" "Welcome to the enhanced bash environment!" -i ""'
 
 # ============================================================================
 # FUNCTIONS
@@ -379,22 +359,148 @@ note() {
     fi
 }
 
-# Quick server (Python)
-serve() {
-    local port="${1:-8000}"
-    python3 -m http.server "$port"
+# Task/Todo management
+todo() {
+    local todo_dir="$HOME/.local/share/todos"
+    local todo_file="$todo_dir/tasks.txt"
+    
+    # Create directory if it doesn't exist
+    [ ! -d "$todo_dir" ] && mkdir -p "$todo_dir"
+    
+    # Initialize file if it doesn't exist
+    [ ! -f "$todo_file" ] && touch "$todo_file"
+    
+    case "$1" in
+        ""|list)
+            # List active tasks
+            if [ -s "$todo_file" ]; then
+                echo "📋 Tasks:"
+                local count=1
+                while IFS= read -r line; do
+                    if [[ "$line" == "[ ]"* ]]; then
+                        echo -e "  \033[1;33m[$count]\033[0m ☐ ${line:4}"
+                        ((count++))
+                    fi
+                done < "$todo_file"
+                
+                # Count summary
+                local active=$(grep -c "^\[ \]" "$todo_file" 2>/dev/null || echo 0)
+                local done=$(grep -c "^\[x\]" "$todo_file" 2>/dev/null || echo 0)
+                echo -e "\n  \033[90m$active active, $done completed\033[0m"
+            else
+                echo "No tasks yet. Use 'todo <task>' to add your first task."
+            fi
+            ;;
+        
+        done|complete|finish)
+            # Mark task as complete
+            if [ -z "$2" ]; then
+                echo "Usage: todo done <number>"
+                return 1
+            fi
+            
+            local task_num="$2"
+            local count=1
+            local temp_file="$todo_file.tmp"
+            local found=false
+            
+            while IFS= read -r line; do
+                if [[ "$line" == "[ ]"* ]] && [ "$count" -eq "$task_num" ]; then
+                    echo "[x] ${line:4} ($(date '+%Y-%m-%d'))" >> "$temp_file"
+                    echo "✓ Completed: ${line:4}"
+                    found=true
+                else
+                    echo "$line" >> "$temp_file"
+                    [[ "$line" == "[ ]"* ]] && ((count++))
+                fi
+            done < "$todo_file"
+            
+            if [ "$found" = true ]; then
+                mv "$temp_file" "$todo_file"
+            else
+                rm -f "$temp_file"
+                echo "Task #$task_num not found"
+                return 1
+            fi
+            ;;
+        
+        all)
+            # Show all tasks including completed
+            if [ -s "$todo_file" ]; then
+                echo "📋 All Tasks:"
+                local count=1
+                while IFS= read -r line; do
+                    if [[ "$line" == "[ ]"* ]]; then
+                        echo -e "  \033[1;33m[$count]\033[0m ☐ ${line:4}"
+                        ((count++))
+                    elif [[ "$line" == "[x]"* ]]; then
+                        echo -e "  \033[90m[✓] ${line:4}\033[0m"
+                    fi
+                done < "$todo_file"
+            else
+                echo "No tasks yet."
+            fi
+            ;;
+        
+        clear|clean)
+            # Remove completed tasks
+            local temp_file="$todo_file.tmp"
+            grep "^\[ \]" "$todo_file" > "$temp_file" 2>/dev/null || true
+            mv "$temp_file" "$todo_file"
+            echo "Cleared completed tasks"
+            ;;
+        
+        remove|delete|rm)
+            # Remove a specific task
+            if [ -z "$2" ]; then
+                echo "Usage: todo remove <number>"
+                return 1
+            fi
+            
+            local task_num="$2"
+            local count=1
+            local temp_file="$todo_file.tmp"
+            local found=false
+            
+            while IFS= read -r line; do
+                if [[ "$line" == "[ ]"* ]] && [ "$count" -eq "$task_num" ]; then
+                    echo "✗ Removed: ${line:4}"
+                    found=true
+                else
+                    echo "$line" >> "$temp_file"
+                    [[ "$line" == "[ ]"* ]] && ((count++))
+                fi
+            done < "$todo_file"
+            
+            if [ "$found" = true ]; then
+                mv "$temp_file" "$todo_file"
+            else
+                rm -f "$temp_file"
+                echo "Task #$task_num not found"
+                return 1
+            fi
+            ;;
+        
+        help)
+            echo "Usage:"
+            echo "  todo              - List active tasks"
+            echo "  todo <task>       - Add a new task"
+            echo "  todo done <n>     - Mark task #n as complete"
+            echo "  todo all          - Show all tasks (including completed)"
+            echo "  todo remove <n>   - Delete task #n"
+            echo "  todo clear        - Remove all completed tasks"
+            echo "  todo help         - Show this help"
+            ;;
+        
+        *)
+            # Add new task
+            echo "[ ] $*" >> "$todo_file"
+            echo "✓ Added: $*"
+            ;;
+    esac
 }
 
-# Countdown timer
-countdown() {
-    local seconds="${1:-60}"
-    while [ "$seconds" -gt 0 ]; do
-        echo -ne "$seconds\033[0K\r"
-        sleep 1
-        : $((seconds--))
-    done
-    echo "Time's up!"
-}
+
 
 # Check if command exists
 command_exists() {
@@ -412,15 +518,6 @@ sysinfo() {
     echo "Disk: $(df -h / | awk 'NR==2 {print $3 "/" $2 " (" $5 ")"}')"
 }
 
-# Git status for all repos in directory
-gitall() {
-    for dir in */; do
-        if [ -d "$dir/.git" ]; then
-            echo -e "\n\033[1;34m=== $dir ===\033[0m"
-            (cd "$dir" && git status -s)
-        fi
-    done
-}
 
 # Colored man pages function
 man() {
