@@ -63,6 +63,7 @@ Shows:
 ### Enhanced Listings
 | Command | Description |
 |---------|-------------|
+| `ls` | All files with headers and icons |
 | `l` | Detailed list with colors |
 | `ll` | Long format with all files |
 | `la` | All files including hidden |
