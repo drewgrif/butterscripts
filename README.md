@@ -16,7 +16,7 @@ The repository is organized into the following directories:
 ### `/bashrc`
 
 - [Installation and Documentation](https://github.com/drewgrif/butterscripts/tree/main/bashrc)
-- **Enhanced bash configuration**: 500+ lines of productivity enhancements with beautiful prompt, 200+ aliases, smart search tools, and development shortcuts
+- **Enhanced bash configuration**: Git-aware prompt, productivity aliases, FZF integration
 
 ---
 
