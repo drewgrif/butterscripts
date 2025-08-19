@@ -1,18 +1,18 @@
 # Enhanced Bash Configuration
 
-A comprehensive, user-friendly bash configuration that transforms your terminal experience with 500+ lines of productivity enhancements.
+A comprehensive, modern bash configuration that transforms your terminal experience with productivity enhancements and thoughtful defaults.
 
 ## Overview
 
-This enhanced `.bashrc` configuration provides a modern, feature-rich terminal environment with intelligent defaults, productivity shortcuts, and user-friendly enhancements. Perfect for both beginners and power users.
+This `.bashrc` configuration provides a feature-rich terminal environment with intelligent defaults, productivity shortcuts, and modern tool integrations. Designed for both beginners and power users on Debian/Ubuntu systems.
 
 ### ✨ Key Features
-- 🎨 **Beautiful, informative prompt** with git integration
-- ⚡ **200+ time-saving aliases** for common tasks  
-- 🔍 **Smart search tools** with FZF integration
+- 🎨 **Git-aware prompt** with time, user, host, and branch info
+- ⚡ **100+ time-saving aliases** for common tasks  
+- 🔍 **FZF integration** for fuzzy searching (when installed)
 - 🛠️ **Useful functions** for development and system management
-- 📚 **Enhanced history** with timestamps and deduplication
-- 🎯 **Intelligent tool detection** and graceful fallbacks
+- 📚 **Enhanced history** with 10,000 entries and deduplication
+- 🎯 **Smart tool detection** with graceful fallbacks
 
 ## Installation
 
@@ -21,249 +21,307 @@ This enhanced `.bashrc` configuration provides a modern, feature-rich terminal e
 cp ~/.bashrc ~/.bashrc.backup
 
 # Copy the enhanced configuration
-cp path/to/enhanced/.bashrc ~/.bashrc
+cp .bashrc ~/.bashrc
 
 # Reload your terminal
 source ~/.bashrc
+
+# Optional: Install recommended tools
+install_tools  # Installs fzf and ripgrep
 ```
 
 ---
 
-## 🎨 Visual Improvements
+## 🎨 Terminal Appearance
 
-### Colorful Terminal Prompt
-- Your terminal prompt now shows:
-  - Current time
-  - Your username
-  - Computer name
-  - Current folder location
-  - Git branch (if you're in a code project)
-  - Special indicator if connected remotely via SSH
+### Enhanced Prompt
+Shows:
+- Current time (HH:MM:SS)
+- Username with SSH indicator (red `-ssh` when connected remotely)
+- Hostname
+- Current directory path
+- Git branch (when in a repository)
+- Color-coded elements for easy reading
 
 ### Colored Output
-- File listings use colors to distinguish file types
-- Manual pages (help documents) are now colorized
-- Search results are highlighted
+- Man pages with syntax highlighting
+- Grep results with color highlights
+- File listings with type indicators (if eza/exa installed)
 
 ---
 
-## 📁 File and Navigation Shortcuts
+## 📁 Navigation & File Management
 
 ### Quick Navigation
-- `..` - Go up one folder
-- `...` - Go up two folders
-- `....` - Go up three folders
-- `~` - Go to your home folder
-- `-` - Go back to the previous folder
+| Command | Description |
+|---------|-------------|
+| `..` | Go up one directory |
+| `...` | Go up two directories |
+| `....` | Go up three directories |
+| `-` | Go back to previous directory |
 
-### Better File Listings
-- `l` - Detailed file list with icons and colors
-- `ls` - All files with headers and icons
-- `ll` - Long format with all details
-- `lt` - Show files in a tree structure
-- `lh` - Show files sorted by when they were last changed
+### Enhanced Listings
+| Command | Description |
+|---------|-------------|
+| `l` | Detailed list with colors |
+| `ll` | Long format with all files |
+| `la` | All files including hidden |
+| `lt` | Tree view (2 levels) |
+| `lh` | Files sorted by modification time |
 
-### Quick Folder Access
-- `g.` - Go to configuration folder (.config)
-- `gd` - Go to Downloads folder
-- `gD` - Go to Documents folder
-- `gp` - Go to projects folder
-- `gt` - Go to temporary folder
-
----
-
-## 📦 System Management Shortcuts
-
-### Software Installation (Ubuntu/Debian systems)
-- `install [program]` - Install new software
-- `search [program]` - Search for available software
-- `update` - Update the software database
-- `upgrade` - Update all installed software
-- `remove [program]` - Remove software
-- `uplist` - Show what can be updated
-
-### System Information
-- `df` - Show disk space usage (human-readable)
-- `free` - Show memory usage (human-readable)
-- `myip` - Show your local and external IP addresses
-- `sysinfo` - Display comprehensive system information
+### Quick Directory Access
+| Command | Description |
+|---------|-------------|
+| `g.` | Go to ~/.config |
+| `gd` | Go to ~/Downloads |
+| `gD` | Go to ~/Documents |
+| `gp` | Go to ~/projects |
+| `gt` | Go to /tmp |
+| `gdw` | Go to DWM config directory |
+| `gds` | Go to slstatus config directory |
 
 ---
 
-## ⚡ Productivity Features
+## 📦 Package Management (Debian/Ubuntu)
 
-### Quick Commands
-- `x` - Exit terminal
-- `c` - Clear screen
-- `h` - Show command history
-- `reload` - Refresh terminal settings
-- `now` - Show current date and time
-
-### File Operations with Safety
-- `cp` - Copy files (asks before overwriting)
-- `mv` - Move files (asks before overwriting)
-- `rm` - Delete files (asks for confirmation)
-- `mkdir` - Create directories (creates parent folders automatically)
-
-### Archive Handling
-- `untar` - Extract .tar files
-- `ungz` - Extract .tar.gz files
-- `unbz2` - Extract .tar.bz2 files
-- Or use the smart `extract [filename]` function that automatically detects file types
+| Command | Description |
+|---------|-------------|
+| `install [pkg]` | Install a package |
+| `search [term]` | Search for packages |
+| `update` | Update package lists |
+| `upgrade` | Update system packages |
+| `fullupgrade` | Full system upgrade with cleanup |
+| `remove [pkg]` | Remove a package |
+| `purge [pkg]` | Remove package and config |
+| `autoremove` | Clean up unused packages |
+| `uplist` | List upgradable packages |
 
 ---
 
-## 💻 Development Tools (If You Code)
+## 💻 Development Tools
 
-### Git (Version Control) Shortcuts
-- `gs` - Check project status
-- `ga` - Add files to staging
-- `gc` - Commit changes
-- `gp` - Push changes to remote repository
-- `gsave` - Quick save with timestamp
+### Git Shortcuts
+| Command | Description |
+|---------|-------------|
+| `gs` | Git status |
+| `ga` | Git add |
+| `gaa` | Git add all |
+| `gc` | Git commit |
+| `gcm` | Git commit with message |
+| `gp` | Git push |
+| `gpl` | Git pull |
+| `gco` | Git checkout |
+| `gb` | Git branch |
+| `gd` | Git diff |
+| `gl` | Git log (graph) |
+| `gclone` | Git clone |
+| `gsave` | Quick commit with timestamp |
 
-### Code Editors
-- `v` - Open Neovim (advanced editor)
-- `vv` - Open Neovim in current folder
-- `e` - Open Micro (user-friendly editor)
-- `n` - Open Nano (simple editor)
+### Docker (if installed)
+| Command | Description |
+|---------|-------------|
+| `d` | Docker shortcut |
+| `dc` | Docker-compose |
+| `dps` | Show containers |
+| `dpsa` | Show all containers |
+| `dimg` | Show images |
+| `dexec` | Execute in container |
+| `dlogs` | Follow logs |
+| `dprune` | Clean up system |
 
-### Docker (If You Use Containers)
-- `d` - Docker command shortcut
-- `dps` - Show running containers
-- `dimg` - Show available images
-
----
-
-## 🔍 Smart Search Features
-
-### FZF (Fuzzy Finder) - If Installed
-- `fzff` - Find and preview any file
-- `fzfd` - Find directories
-- `cdf` - Change to a directory using search
-- `vf` - Open a file in your editor using search
-- `fkill` - Find and stop a running program
-- `fh` - Search through your command history
-
-### Regular Search
-- `fif [name]` - Find files by name
-- `fid [name]` - Find directories by name
-- `biggest` - Show largest files/folders
-
----
-
-## 🛠️ Useful Functions
-
-### File Management
-- `mkcd [folder]` - Create a folder and enter it
-- `backup [file]` - Create a timestamped backup copy
-- `dirsize [folder]` - Show how much space a folder uses
-
-### Utilities
-- `calc [math]` - Simple calculator (e.g., `calc 15*3`)
-- `note [text]` - Add quick notes to a file
-- `serve [port]` - Start a simple web server in current folder
-- `countdown [seconds]` - Timer that counts down
-- `path` - Show all folders in your PATH in a readable list
-
-### System Monitoring
-- `top` - Show running programs (prefers btop → htop → top)
-- `mem` - Show memory usage and top memory-using programs
-- `cpu` - Show top CPU-using programs
+### Editors
+| Command | Description |
+|---------|-------------|
+| `v` | Open nvim |
+| `vv` | Open nvim in current directory |
+| `e` | Open micro |
+| `n` | Open nano |
 
 ---
 
-## 🌐 Network and Web Features
+## 🔍 Search & Filter
 
-- `myip` - Show your local network IP and external internet IP
-- `ports` - Show network connections  
-- `weather` - Get weather for your location
+### FZF Integration (when installed)
+| Command | Description |
+|---------|-------------|
+| `vf()` | Find and open file in editor |
+| `fkill()` | Find and kill process |
+| `Ctrl-T` | Insert file path |
+| `Alt-C` | Change directory |
+| `Ctrl-R` | Search command history |
 
----
-
-## 📚 Learning and Help
-
-### Getting Information
-- `ff` - Show system information with style (fastfetch/neofetch)
-- `sysinfo` - Detailed system information
-- `which [command]` - Find where a command is located
-- `man [command]` - Show help manual for any command
-
-### History Management
-Your terminal now remembers:
-- 10,000 recent commands (vs. default 1,000)
-- Commands are saved with timestamps
-- Duplicate commands are automatically removed
-- Commands are instantly saved (not just when you close terminal)
+### System Search
+| Command | Description |
+|---------|-------------|
+| `grep` | Colored grep |
+| `biggest` | Show largest files/folders |
 
 ---
 
-## 🎯 Special Features
+## 🛠️ Utility Functions
 
-### Smart Command Completion
-- Press Tab to auto-complete file names, commands, and options
-- Works with Git commands and branches
-- Enhanced completion for many common tools
+### File Operations
+| Function | Description |
+|---------|-------------|
+| `mkcd [dir]` | Create directory and enter it |
+| `backup [file]` | Create timestamped backup |
+| `extract [archive]` | Smart archive extraction |
+| `dirsize [dir]` | Get directory size |
 
-### Keyboard Shortcuts
-- Ctrl+L: Clear screen
-- Up/Down arrows: Search through command history based on what you've typed
-- Ctrl+S/Ctrl+Q: Disabled (won't freeze your terminal accidentally)
+### System Tools
+| Function | Description |
+|---------|-------------|
+| `calc [expr]` | Quick calculator |
+| `note [text]` | Add/view notes (~/.local/share/notes) |
+| `serve [port]` | Start Python HTTP server |
+| `countdown [sec]` | Countdown timer |
+| `path()` | Display PATH entries |
+| `sysinfo()` | System information summary |
+| `gitall()` | Git status for all repos in directory |
 
-### Welcome Message
-When you open a terminal, you'll see:
-- Welcome message with your username
-- Current date and time
-- System uptime
-- Current system load
+### Tool Installation
+| Function | Description |
+|---------|-------------|
+| `install_tools()` | Install fzf and ripgrep |
+
+---
+
+## ⚡ Quick Commands
+
+### System Shortcuts
+| Command | Description |
+|---------|-------------|
+| `x` | Exit terminal |
+| `c` | Clear screen |
+| `h` | Show history |
+| `reload` | Reload .bashrc |
+| `now` | Current date/time |
+| `week` | Current week number |
+
+### Network
+| Command | Description |
+|---------|-------------|
+| `myip` | Show local and external IP |
+| `ports` | Show network ports |
+| `listening` | Show listening processes |
+
+### System Info
+| Command | Description |
+|---------|-------------|
+| `df` | Disk usage (human-readable) |
+| `du` | Directory sizes |
+| `free` | Memory usage |
+| `ps` | Process tree |
+| `top` | Process monitor (btop/htop/top) |
+| `mem` | Top memory consumers |
+| `cpu` | Top CPU consumers |
+
+### Misc
+| Command | Description |
+|---------|-------------|
+| `ff` | System info (fastfetch/neofetch) |
+| `weather` | Weather forecast |
+| `hi` | Test notification (if dunst running) |
+
+---
+
+## ⚙️ Shell Options
+
+### Enabled Features
+- `histappend` - Append to history file
+- `checkwinsize` - Update window size after commands
+- `cdspell` - Autocorrect cd typos
+- `dirspell` - Correct directory name typos
+- `autocd` - Type directory name to cd
+- `globstar` - Enable ** for recursive matching
+- `nocaseglob` - Case-insensitive globbing
+- `extglob` - Extended pattern matching
+
+### History Configuration
+- 10,000 command history
+- 20,000 line history file
+- Timestamps for all commands
+- Duplicate removal
+- Ignores common commands (ls, cd, pwd, etc.)
+- Immediate history writes
+
+---
+
+## 🎹 Key Bindings
+
+- `Ctrl-L` - Clear screen
+- `↑/↓` - Search history based on current input
+- Terminal pause (Ctrl-S/Q) disabled
 
 ---
 
 ## 🔧 Customization
 
-### Configuration Files Quick Access
-- `bashrc` - Edit terminal configuration
-- `vimrc` - Edit Vim editor settings
-- `nvimrc` - Edit Neovim editor settings
+### Config File Shortcuts
+| Command | Description |
+|---------|-------------|
+| `bashrc` | Edit ~/.bashrc |
+| `vimrc` | Edit ~/.vimrc |
+| `nvimrc` | Edit nvim config |
+| `tmuxconf` | Edit tmux config |
 
 ### Local Overrides
-- The system looks for a `.bashrc.local` file for machine-specific settings
-- You can add personal customizations there without affecting the main configuration
+Create `~/.bashrc.local` for machine-specific settings that won't be overwritten.
+
+### DWM Integration
+| Command | Description |
+|---------|-------------|
+| `gdw` | Go to DWM directory |
+| `gds` | Go to slstatus directory |
+| `remake` | Rebuild and install DWM/slstatus |
 
 ---
 
-## 🚀 Performance Notes
+## 📋 Requirements
 
-This enhanced setup is designed to be:
-- **Fast**: Commands load quickly and don't slow down your terminal
-- **Safe**: File operations ask for confirmation before destructive actions
-- **Smart**: Only enables features if the required tools are installed
-- **Organized**: Everything is clearly categorized and documented
+### Core (Always Available)
+- Bash 4.0+
+- Standard GNU coreutils
+
+### Optional Enhancements
+- `eza` or `exa` - Better ls replacement
+- `fzf` - Fuzzy finder (install with `install_tools`)
+- `ripgrep` - Fast grep (install with `install_tools`)
+- `fd` - Fast find alternative
+- `bat` - Better cat with syntax highlighting
+- `btop` or `htop` - Better top
+- `fastfetch` or `neofetch` - System info display
 
 ---
 
-## 💡 Tips for New Users
+## 🚀 Performance
 
-1. **Start Small**: You don't need to learn all these shortcuts at once
-2. **Most Useful**: Focus on navigation (`..`, `ll`, `c`, `x`) and file operations first
-3. **Explore Gradually**: Try one new shortcut each day
-4. **Backup**: Your original settings are saved as backups
-5. **Reset**: You can always restore the original .bashrc if needed
+- Lazy loading for optional tools
+- Conditional feature enabling
+- Minimal startup overhead
+- Smart caching where applicable
+
+---
+
+## 💡 Tips
+
+1. Run `install_tools` after installation for FZF and ripgrep
+2. Use `reload` to apply changes without restarting terminal
+3. Check `alias` to see all available shortcuts
+4. Use `type [command]` to see what a command does
+5. Create `~/.bashrc.local` for personal additions
 
 ---
 
 ## 🔄 Maintenance
 
-- Use `reload` to refresh terminal settings after changes
-- The configuration automatically backs up important files with timestamps
-- All features gracefully handle missing dependencies
-- Updates preserve your personal customizations
+The configuration:
+- Automatically detects available tools
+- Gracefully falls back when tools are missing
+- Preserves itself through updates
+- Backs up files before operations
 
 ---
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit issues, feature requests, or pull requests.
 
 ## 📄 License
 
@@ -271,4 +329,4 @@ This configuration is open source and available under the MIT License.
 
 ---
 
-*Transform your terminal into a powerful, user-friendly command-line environment while maintaining compatibility and safety.*
+*A modern bash configuration that respects tradition while embracing productivity.*

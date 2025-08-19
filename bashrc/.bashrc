@@ -191,11 +191,6 @@ if command -v docker >/dev/null 2>&1; then
     alias dprune='docker system prune -a'
 fi
 
-# Python
-alias py='python3'
-alias pip='pip3'
-alias venv='python3 -m venv'
-alias activate='source venv/bin/activate'
 
 # ============================================================================
 # ALIASES - EDITORS AND CONFIG
@@ -244,35 +239,16 @@ alias week='date +%V'
 alias grep='grep --color=auto'
 alias egrep='egrep --color=auto'
 alias fgrep='fgrep --color=auto'
-alias rg='rg --color=auto'
 
-# Find commands
-alias fif='find . -type f -name'
-alias fid='find . -type d -name'
+# Disk usage
 alias biggest='du -h --max-depth=1 | sort -h'
 
-# FZF-powered commands (if available)
+# FZF configuration (if available)
 if command -v fzf >/dev/null 2>&1; then
-    # File and directory search
-    alias fzff='fzf --preview "bat --color=always {} 2>/dev/null || cat {}"'
-    alias fzfd='find . -type d | fzf --preview "ls -la {}"'
-    
-    # Change directory with fzf
-    cdf() {
-        local dir
-        dir=$(find ${1:-.} -type d 2> /dev/null | fzf +m) && cd "$dir"
-    }
-    
     # Open file in editor with fzf
     vf() {
         local file
         file=$(fzf --preview "bat --color=always {} 2>/dev/null || cat {}") && ${EDITOR:-vim} "$file"
-    }
-    
-    # Git branch switch with fzf
-    gcof() {
-        local branch
-        branch=$(git branch -a | grep -v HEAD | fzf | sed 's/.* //') && git checkout "$branch"
     }
     
     # Kill process with fzf
@@ -282,11 +258,6 @@ if command -v fzf >/dev/null 2>&1; then
         if [ "x$pid" != "x" ]; then
             echo "$pid" | xargs kill -${1:-9}
         fi
-    }
-    
-    # Search history with fzf
-    fh() {
-        eval $( ([ -n "$ZSH_NAME" ] && fc -l 1 || history) | fzf +s --tac | sed 's/ *[0-9]* *//')
     }
     
     # FZF default options
@@ -390,9 +361,18 @@ path() {
 
 # Quick note taking
 note() {
-    local note_file="$HOME/notes.md"
+    local note_dir="$HOME/.local/share/notes"
+    local note_file="$note_dir/notes.md"
+    
+    # Create directory if it doesn't exist
+    [ ! -d "$note_dir" ] && mkdir -p "$note_dir"
+    
     if [ "$#" -eq 0 ]; then
-        cat "$note_file"
+        if [ -f "$note_file" ]; then
+            cat "$note_file"
+        else
+            echo "No notes yet. Use 'note <text>' to add your first note."
+        fi
     else
         echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*" >> "$note_file"
         echo "Note added to $note_file"
@@ -495,6 +475,34 @@ if [ -n "$PS1" ]; then
     echo -e "Load: $(uptime | awk -F'load average:' '{print $2}')"
     echo
 fi
+
+# ============================================================================
+# TOOL INSTALLERS
+# ============================================================================
+
+# Install useful tools (fzf and ripgrep)
+install_tools() {
+    echo "Installing fzf and ripgrep..."
+    
+    # Install fzf
+    if ! command -v fzf >/dev/null 2>&1; then
+        echo "Installing fzf..."
+        sudo apt update && sudo apt install -y fzf
+    else
+        echo "fzf already installed"
+    fi
+    
+    # Install ripgrep
+    if ! command -v rg >/dev/null 2>&1; then
+        echo "Installing ripgrep..."
+        sudo apt update && sudo apt install -y ripgrep
+    else
+        echo "ripgrep already installed"
+    fi
+    
+    echo "Tools installation complete!"
+    echo "Reload your shell with: source ~/.bashrc"
+}
 
 # ============================================================================
 # LOCAL OVERRIDES
