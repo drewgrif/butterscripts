@@ -2,11 +2,7 @@
 
 A comprehensive, modern bash configuration that transforms your terminal experience with productivity enhancements and thoughtful defaults.
 
-## Overview
-
-This `.bashrc` configuration provides a feature-rich terminal environment with intelligent defaults, productivity shortcuts, and modern tool integrations. Designed for both beginners and power users on Debian/Ubuntu systems.
-
-### ✨ Key Features
+## ✨ Key Features
 - 🎨 **Git-aware prompt** with time, user, host, and branch info
 - ⚡ **100+ time-saving aliases** for common tasks  
 - 🔍 **FZF integration** for fuzzy searching (when installed)
@@ -30,23 +26,13 @@ source ~/.bashrc
 install_tools  # Installs fzf and ripgrep
 ```
 
----
+## 💡 Tips
 
-## 🎨 Terminal Appearance
-
-### Enhanced Prompt
-Shows:
-- Current time (HH:MM:SS)
-- Username with SSH indicator (red `-ssh` when connected remotely)
-- Hostname
-- Current directory path
-- Git branch (when in a repository)
-- Color-coded elements for easy reading
-
-### Colored Output
-- Man pages with syntax highlighting
-- Grep results with color highlights
-- File listings with type indicators (if eza/exa installed)
+1. Run `install_tools` after installation for FZF and ripgrep
+2. Use `reload` to apply changes without restarting terminal
+3. Check `alias` to see all available shortcuts
+4. Use `type [command]` to see what a command does
+5. Create `~/.bashrc.local` for personal additions
 
 ---
 
@@ -78,8 +64,6 @@ Shows:
 | `gD` | Go to ~/Documents |
 | `gp` | Go to ~/projects |
 | `gt` | Go to /tmp |
-| `gdw` | Go to DWM config directory |
-| `gds` | Go to slstatus config directory |
 
 ---
 
@@ -93,15 +77,12 @@ Shows:
 | `upgrade` | Update system packages |
 | `fullupgrade` | Full system upgrade with cleanup |
 | `remove [pkg]` | Remove a package |
-| `purge [pkg]` | Remove package and config |
 | `autoremove` | Clean up unused packages |
-| `uplist` | List upgradable packages |
 
 ---
 
-## 💻 Development Tools
+## 💻 Git Shortcuts
 
-### Git Shortcuts
 | Command | Description |
 |---------|-------------|
 | `gs` | Git status |
@@ -115,28 +96,58 @@ Shows:
 | `gb` | Git branch |
 | `gd` | Git diff |
 | `gl` | Git log (graph) |
-| `gclone` | Git clone |
 | `gsave` | Quick commit with timestamp |
 
-### Docker (if installed)
-| Command | Description |
-|---------|-------------|
-| `d` | Docker shortcut |
-| `dc` | Docker-compose |
-| `dps` | Show containers |
-| `dpsa` | Show all containers |
-| `dimg` | Show images |
-| `dexec` | Execute in container |
-| `dlogs` | Follow logs |
-| `dprune` | Clean up system |
+---
 
-### Editors
+## 🛠️ Essential Functions
+
+### File Operations
+| Function | Description |
+|---------|-------------|
+| `mkcd [dir]` | Create directory and enter it |
+| `backup [file]` | Create timestamped backup |
+| `extract [archive]` | Smart archive extraction |
+| `dirsize [dir]` | Get directory size |
+
+### System Tools
+| Function | Description |
+|---------|-------------|
+| `calc [expr]` | Quick calculator |
+| `note [text]` | Add/view notes (~/.local/share/notes) |
+| `serve [port]` | Start Python HTTP server |
+| `countdown [sec]` | Countdown timer |
+| `sysinfo()` | System information summary |
+
+---
+
+## ⚡ Quick Commands
+
+### System Shortcuts
 | Command | Description |
 |---------|-------------|
-| `v` | Open nvim |
-| `vv` | Open nvim in current directory |
-| `e` | Open micro |
-| `n` | Open nano |
+| `x` | Exit terminal |
+| `c` | Clear screen |
+| `h` | Show history |
+| `reload` | Reload .bashrc |
+| `now` | Current date/time |
+
+### Network
+| Command | Description |
+|---------|-------------|
+| `myip` | Show local and external IP |
+| `ports` | Show network ports |
+| `listening` | Show listening processes |
+
+### System Info
+| Command | Description |
+|---------|-------------|
+| `df` | Disk usage (human-readable) |
+| `du` | Directory sizes |
+| `free` | Memory usage |
+| `top` | Process monitor (btop/htop/top) |
+| `mem` | Top memory consumers |
+| `cpu` | Top CPU consumers |
 
 ---
 
@@ -159,76 +170,73 @@ Shows:
 
 ---
 
-## 🛠️ Utility Functions
+## 🎨 Terminal Appearance
 
-### File Operations
-| Function | Description |
-|---------|-------------|
-| `mkcd [dir]` | Create directory and enter it |
-| `backup [file]` | Create timestamped backup |
-| `extract [archive]` | Smart archive extraction |
-| `dirsize [dir]` | Get directory size |
+### Enhanced Prompt
+Shows:
+- Current time (HH:MM:SS)
+- Username with SSH indicator (red `-ssh` when connected remotely)
+- Hostname
+- Current directory path
+- Git branch (when in a repository)
+- Color-coded elements for easy reading
 
-### System Tools
-| Function | Description |
-|---------|-------------|
-| `calc [expr]` | Quick calculator |
-| `note [text]` | Add/view notes (~/.local/share/notes) |
-| `serve [port]` | Start Python HTTP server |
-| `countdown [sec]` | Countdown timer |
-| `path()` | Display PATH entries |
-| `sysinfo()` | System information summary |
-| `gitall()` | Git status for all repos in directory |
-
-### Tool Installation
-| Function | Description |
-|---------|-------------|
-| `install_tools()` | Install fzf and ripgrep |
+### Colored Output
+- Man pages with syntax highlighting
+- Grep results with color highlights
+- File listings with type indicators (if eza/exa installed)
 
 ---
 
-## ⚡ Quick Commands
+## 💻 Advanced Tools
 
-### System Shortcuts
+### Docker (if installed)
 | Command | Description |
 |---------|-------------|
-| `x` | Exit terminal |
-| `c` | Clear screen |
-| `h` | Show history |
-| `reload` | Reload .bashrc |
-| `now` | Current date/time |
-| `week` | Current week number |
+| `d` | Docker shortcut |
+| `dc` | Docker-compose |
+| `dps` | Show containers |
+| `dpsa` | Show all containers |
+| `dimg` | Show images |
+| `dexec` | Execute in container |
+| `dlogs` | Follow logs |
+| `dprune` | Clean up system |
 
-### Network
+### Editors
 | Command | Description |
 |---------|-------------|
-| `myip` | Show local and external IP |
-| `ports` | Show network ports |
-| `listening` | Show listening processes |
+| `v` | Open nvim |
+| `vv` | Open nvim in current directory |
+| `e` | Open micro |
+| `n` | Open nano |
 
-### System Info
+### DWM Integration
 | Command | Description |
 |---------|-------------|
-| `df` | Disk usage (human-readable) |
-| `du` | Directory sizes |
-| `free` | Memory usage |
-| `ps` | Process tree |
-| `top` | Process monitor (btop/htop/top) |
-| `mem` | Top memory consumers |
-| `cpu` | Top CPU consumers |
-
-### Misc
-| Command | Description |
-|---------|-------------|
-| `ff` | System info (fastfetch/neofetch) |
-| `weather` | Weather forecast |
-| `hi` | Test notification (if dunst running) |
+| `gdw` | Go to DWM directory |
+| `gds` | Go to slstatus directory |
+| `remake` | Rebuild and install DWM/slstatus |
 
 ---
 
-## ⚙️ Shell Options
+## 🔧 Customization
 
-### Enabled Features
+### Config File Shortcuts
+| Command | Description |
+|---------|-------------|
+| `bashrc` | Edit ~/.bashrc |
+| `vimrc` | Edit ~/.vimrc |
+| `nvimrc` | Edit nvim config |
+| `tmuxconf` | Edit tmux config |
+
+### Local Overrides
+Create `~/.bashrc.local` for machine-specific settings that won't be overwritten.
+
+---
+
+## ⚙️ Technical Details
+
+### Shell Options
 - `histappend` - Append to history file
 - `checkwinsize` - Update window size after commands
 - `cdspell` - Autocorrect cd typos
@@ -246,35 +254,10 @@ Shows:
 - Ignores common commands (ls, cd, pwd, etc.)
 - Immediate history writes
 
----
-
-## 🎹 Key Bindings
-
+### Key Bindings
 - `Ctrl-L` - Clear screen
 - `↑/↓` - Search history based on current input
 - Terminal pause (Ctrl-S/Q) disabled
-
----
-
-## 🔧 Customization
-
-### Config File Shortcuts
-| Command | Description |
-|---------|-------------|
-| `bashrc` | Edit ~/.bashrc |
-| `vimrc` | Edit ~/.vimrc |
-| `nvimrc` | Edit nvim config |
-| `tmuxconf` | Edit tmux config |
-
-### Local Overrides
-Create `~/.bashrc.local` for machine-specific settings that won't be overwritten.
-
-### DWM Integration
-| Command | Description |
-|---------|-------------|
-| `gdw` | Go to DWM directory |
-| `gds` | Go to slstatus directory |
-| `remake` | Rebuild and install DWM/slstatus |
 
 ---
 
@@ -301,18 +284,6 @@ Create `~/.bashrc.local` for machine-specific settings that won't be overwritten
 - Conditional feature enabling
 - Minimal startup overhead
 - Smart caching where applicable
-
----
-
-## 💡 Tips
-
-1. Run `install_tools` after installation for FZF and ripgrep
-2. Use `reload` to apply changes without restarting terminal
-3. Check `alias` to see all available shortcuts
-4. Use `type [command]` to see what a command does
-5. Create `~/.bashrc.local` for personal additions
-
----
 
 ## 🔄 Maintenance
 
