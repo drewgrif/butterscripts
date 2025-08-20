@@ -13,12 +13,6 @@ Butterscripts is a collection of utility scripts that help streamline various ta
 
 The repository is organized into the following directories:
 
-### `/bashrc`
-
-- [Installation and Documentation](https://github.com/drewgrif/butterscripts/tree/main/bashrc)
-- **Enhanced bash configuration**: Git-aware prompt, productivity aliases, FZF integration
-
----
 
 ### `/browsers`
 
@@ -77,7 +71,6 @@ The repository is organized into the following directories:
 
 ### `/system`
 
-- **add_bashrc.sh**: Adds custom bash configuration
 - **install_bluetooth.sh**: Installs and configures Bluetooth support
 - **install_lightdm.sh**: Installs LightDM display manager
 - **install_printer_support.sh**: Sets up printer support
