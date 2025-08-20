@@ -374,20 +374,23 @@ show_butterscripts_menu() {
                 echo
                 
                 if ask_yes_no "Do you want to install ButterBash (will backup existing .bashrc)?"; then
-                    # Download installer to temp location
-                    temp_installer="/tmp/butterbash-install.sh"
-                    wget -q "https://raw.githubusercontent.com/drewgrif/butterbash/main/install.sh" -O "$temp_installer"
+                    # Clone the repository to temp location
+                    temp_dir="/tmp/butterbash-$(date +%s)"
+                    echo -e "${YELLOW}Cloning ButterBash repository...${NC}"
                     
-                    if [[ $? -eq 0 ]]; then
-                        # Run normally - full installation with backup
-                        if bash "$temp_installer"; then
+                    if git clone --quiet https://github.com/drewgrif/butterbash.git "$temp_dir" 2>/dev/null; then
+                        # Run installer from the cloned directory without confirmation
+                        cd "$temp_dir"
+                        export SKIP_CONFIRMATION=true
+                        if bash install.sh; then
                             echo -e "${GREEN}ButterBash installation completed.${NC}"
                         else
                             echo -e "${RED}ButterBash installation failed or was cancelled.${NC}"
                         fi
-                        rm -f "$temp_installer"
+                        cd - > /dev/null
+                        rm -rf "$temp_dir"
                     else
-                        echo -e "${RED}Failed to download ButterBash installer${NC}"
+                        echo -e "${RED}Failed to clone ButterBash repository${NC}"
                     fi
                 else
                     echo -e "${YELLOW}ButterBash installation cancelled.${NC}"
