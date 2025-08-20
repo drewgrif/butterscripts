@@ -352,21 +352,49 @@ show_butterscripts_menu() {
     while true; do
         show_header
         echo -e "${YELLOW}Select a ButterScript to install:${NC}"
-        echo -e "${CYAN}1. ${NC}Geany - Text Editor with plugins (Latest version 2.1 from source)"
-        echo -e "${CYAN}2. ${NC}Browsers - Firefox, LibreWolf, Brave, Floorp, Vivaldi, Chromium, Zen"
-        echo -e "${CYAN}3. ${NC}Discord - Chat and Voice Application"
-        echo -e "${CYAN}4. ${NC}Fastfetch - System Information Display Tool"
-        echo -e "${CYAN}5. ${NC}Custom Neovim - JustAGuy Linux Pre-configured Editor"
-        echo -e "${CYAN}6. ${NC}Vanilla Neovim (Latest Build) - Compiled from Source"
-        echo -e "${CYAN}7. ${NC}Return to Main Menu"
+        echo -e "${CYAN}1. ${NC}ButterBash - Modular bash configuration with note/todo functions ⭐"
+        echo -e "${CYAN}2. ${NC}Geany - Text Editor with plugins (Latest version 2.1 from source)"
+        echo -e "${CYAN}3. ${NC}Browsers - Firefox, LibreWolf, Brave, Floorp, Vivaldi, Chromium, Zen"
+        echo -e "${CYAN}4. ${NC}Discord - Chat and Voice Application"
+        echo -e "${CYAN}5. ${NC}Fastfetch - System Information Display Tool"
+        echo -e "${CYAN}6. ${NC}Custom Neovim - JustAGuy Linux Pre-configured Editor"
+        echo -e "${CYAN}7. ${NC}Vanilla Neovim (Latest Build) - Compiled from Source"
+        echo -e "${CYAN}8. ${NC}Return to Main Menu"
         echo
         echo -e "${YELLOW}NOTE: Each installer has its own interactive options.${NC}"
         echo -e "${YELLOW}      It's recommended to install one at a time.${NC}"
         echo
-        read -p "Enter your choice [1-7]: " choice
+        read -p "Enter your choice [1-8]: " choice
         
         case $choice in
-            1) 
+            1)
+                echo -e "${CYAN}Installing ButterBash...${NC}"
+                echo -e "${YELLOW}ButterBash provides a modular bash configuration with note-taking and todo management.${NC}"
+                echo -e "${YELLOW}This will backup your current .bashrc and install the full ButterBash configuration.${NC}"
+                echo
+                
+                if ask_yes_no "Do you want to install ButterBash (will backup existing .bashrc)?"; then
+                    # Download installer to temp location
+                    temp_installer="/tmp/butterbash-install.sh"
+                    wget -q "https://raw.githubusercontent.com/drewgrif/butterbash/main/install.sh" -O "$temp_installer"
+                    
+                    if [[ $? -eq 0 ]]; then
+                        # Run normally - full installation with backup
+                        if bash "$temp_installer"; then
+                            echo -e "${GREEN}ButterBash installation completed.${NC}"
+                        else
+                            echo -e "${RED}ButterBash installation failed or was cancelled.${NC}"
+                        fi
+                        rm -f "$temp_installer"
+                    else
+                        echo -e "${RED}Failed to download ButterBash installer${NC}"
+                    fi
+                else
+                    echo -e "${YELLOW}ButterBash installation cancelled.${NC}"
+                fi
+                pause
+                ;;
+            2) 
                 download_script "https://raw.githubusercontent.com/drewgrif/butterscripts/refs/heads/main/setup/install_geany.sh" "install_geany.sh"
                 if bash "/tmp/install_geany.sh"; then
                     echo -e "${GREEN}Geany installation completed.${NC}"
@@ -375,7 +403,7 @@ show_butterscripts_menu() {
                 fi
                 pause
                 ;;
-            2) 
+            3) 
                 download_script "https://raw.githubusercontent.com/drewgrif/butterscripts/refs/heads/main/browsers/install_browsers.sh" "install_browsers.sh"
                 if bash "/tmp/install_browsers.sh"; then
                     echo -e "${GREEN}Browsers installation process completed.${NC}"
@@ -384,9 +412,9 @@ show_butterscripts_menu() {
                 fi
                 pause
                 ;;
-            3) install_discord ;;  # This one is different, keep as is
-            4) install_fastfetch ;; # This one needs config files, keep as is
-            5) 
+            4) install_discord ;;  # This one is different, keep as is
+            5) install_fastfetch ;; # This one needs config files, keep as is
+            6) 
                 download_script "https://raw.githubusercontent.com/drewgrif/butterscripts/refs/heads/main/neovim/buttervim.sh" "buttervim.sh"
                 if bash "/tmp/buttervim.sh"; then
                     echo -e "${GREEN}Neovim installation process completed.${NC}"
@@ -395,7 +423,7 @@ show_butterscripts_menu() {
                 fi
                 pause
                 ;;
-            6) 
+            7) 
                 download_script "https://raw.githubusercontent.com/drewgrif/butterscripts/refs/heads/main/neovim/build-neovim.sh" "build-neovim.sh"
                 if bash "/tmp/build-neovim.sh"; then
                     echo -e "${GREEN}Neovim build and installation completed.${NC}"
@@ -404,7 +432,7 @@ show_butterscripts_menu() {
                 fi
                 pause
                 ;;
-            7) return ;;
+            8) return ;;
             *)
                 echo -e "${RED}Invalid option. Please try again.${NC}"
                 pause
