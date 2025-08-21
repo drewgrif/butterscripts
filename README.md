@@ -59,7 +59,7 @@ The repository is organized into the following directories:
 - **install_caligula.sh**: Installs Caligula disk imaging TUI
 - **install_geany.sh**: Installs Geany text editor (APT or source build options)
 - **install_picom.sh**: Installs Picom compositor
-- **optional_tools.sh**: Installs various optional development tools
+- **optional_tools.sh**: Interactive installer for development tools including [ButterBash](https://github.com/drewgrif/butterbash) ⭐
 
 ---
 
