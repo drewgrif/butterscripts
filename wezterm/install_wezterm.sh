@@ -50,7 +50,7 @@ install_wezterm
 
     # Set wezterm as default terminal emulator (fixes Debian 13 defaulting to lxterminal)
     if command -v wezterm &> /dev/null && command -v update-alternatives &> /dev/null; then
-        msg "Setting wezterm as default terminal emulator..."
+        echo "Setting wezterm as default terminal emulator..."
         sudo update-alternatives --install /usr/bin/x-terminal-emulator x-terminal-emulator /usr/bin/wezterm 50
         sudo update-alternatives --set x-terminal-emulator /usr/bin/wezterm
     fi
