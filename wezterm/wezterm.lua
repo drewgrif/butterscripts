@@ -70,6 +70,7 @@ config.webgpu_power_preference = "HighPerformance"
 config.prefer_egl = true
 config.freetype_load_target = "Light"
 config.freetype_render_target = "HorizontalLcd"
+config.hide_tab_bar_if_only_one_tab = false
 
 -- Color scheme
 config.colors = {
