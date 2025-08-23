@@ -11,15 +11,21 @@ find_firefox_dir() {
             echo "/Applications/Firefox.app/Contents/Resources"
             ;;
         Linux)
-            # Try common locations
-            for dir in /usr/lib/firefox /opt/firefox /usr/lib64/firefox; do
+            # Try common locations including Firefox ESR
+            for dir in /usr/lib/firefox-esr /usr/lib/firefox /opt/firefox /usr/lib64/firefox-esr /usr/lib64/firefox /usr/share/firefox-esr /usr/share/firefox; do
                 if [[ -d "$dir" ]]; then
                     echo "$dir"
                     return
                 fi
             done
-            # Fallback to system-wide config
-            echo "/etc/firefox"
+            # Fallback to system-wide config (works for both firefox and firefox-esr)
+            if [[ -d "/etc/firefox-esr" ]]; then
+                echo "/etc/firefox-esr"
+            elif [[ -d "/etc/firefox" ]]; then
+                echo "/etc/firefox"
+            else
+                echo "/etc/firefox"
+            fi
             ;;
         *)
             echo "Unsupported OS"
@@ -124,6 +130,22 @@ sudo tee "$DIST_DIR/policies.json" > /dev/null << EOF
       "Remove": ["Google", "Bing", "Wikipedia", "Amazon.com", "eBay"],
       "Add": [
         {
+          "Name": "Brave Search",
+          "URLTemplate": "https://search.brave.com/search?q={searchTerms}",
+          "Method": "GET",
+          "IconURL": "https://search.brave.com/favicon.ico",
+          "Alias": ":b",
+          "Description": "Brave Privacy Search"
+        },
+        {
+          "Name": "DuckDuckGo",
+          "URLTemplate": "https://duckduckgo.com/?q={searchTerms}",
+          "Method": "GET",
+          "IconURL": "https://duckduckgo.com/favicon.ico",
+          "Alias": ":d", 
+          "Description": "DuckDuckGo Search"
+        },
+        {
           "Name": "Google Web",
           "URLTemplate": "https://www.google.com/search?udm=14&q={searchTerms}",
           "Method": "GET",
@@ -154,14 +176,6 @@ sudo tee "$DIST_DIR/policies.json" > /dev/null << EOF
           "IconURL": "https://www.google.com/favicon.ico", 
           "Alias": ":gm",
           "Description": "Google Maps Search"
-        },
-        {
-          "Name": "DuckDuckGo",
-          "URLTemplate": "https://duckduckgo.com/?q={searchTerms}",
-          "Method": "GET",
-          "IconURL": "https://duckduckgo.com/favicon.ico",
-          "Alias": ":ddg", 
-          "Description": "DuckDuckGo Search"
         }$SEARXNG_ENGINES
       ]
     }
@@ -173,11 +187,12 @@ echo "✅ Firefox search engines configured!"
 echo ""
 echo "Restart Firefox to see the new search engines."
 echo "You can use them with keywords like:"
+echo "  :b search term     -> Brave Search"
+echo "  :d search term     -> DuckDuckGo"
 echo "  :gw search term    -> Google Web"
 echo "  :gi search term    -> Google Images" 
 echo "  :gn search term    -> Google News"
 echo "  :gm search term    -> Google Maps"
-echo "  :ddg search term   -> DuckDuckGo"
 
 if [[ -n "$SEARXNG_URL" ]]; then
     echo "  :sx search term    -> SearXNG"
