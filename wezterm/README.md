@@ -31,6 +31,7 @@ The script:
 2. Installs the latest WezTerm nightly build
 3. Sets up configuration in ~/.config/wezterm
 4. Uses the configuration from https://github.com/drewgrif/butterscripts/wezterm/wezterm.lua
+5. **Sets WezTerm as the default terminal emulator** (Debian 13+) - Configures the system to use WezTerm when file managers like Thunar launch a terminal, replacing the default lxterminal
 
 ## Configuration Features
 The included configuration provides:
