@@ -119,6 +119,15 @@ else
     echo "Skipping SearXNG setup"
 fi
 
+# Set default search engine based on user choice
+if [[ -n "$SEARXNG_URL" ]]; then
+    DEFAULT_SEARCH="SearXNG"
+    echo "Setting SearXNG as default search engine..."
+else
+    DEFAULT_SEARCH="DuckDuckGo"
+    echo "Setting DuckDuckGo as default search engine..."
+fi
+
 # Create distribution directory if it doesn't exist
 sudo mkdir -p "$DIST_DIR"
 
@@ -128,6 +137,7 @@ sudo tee "$DIST_DIR/policies.json" > /dev/null << EOF
   "policies": {
     "SearchEngines": {
       "Remove": ["Google", "Bing", "Wikipedia", "Amazon.com", "eBay"],
+      ${DEFAULT_SEARCH:+"\"Default\": \"$DEFAULT_SEARCH\","}
       "Add": [
         {
           "Name": "Brave Search",
@@ -186,6 +196,12 @@ EOF
 echo "✅ Firefox search engines configured!"
 echo ""
 echo "Restart Firefox to see the new search engines."
+if [[ -n "$SEARXNG_URL" ]]; then
+    echo "Default search engine: SearXNG ($SEARXNG_URL)"
+else
+    echo "Default search engine: DuckDuckGo (privacy-focused)"
+fi
+echo ""
 echo "You can use them with keywords like:"
 echo "  :b search term     -> Brave Search"
 echo "  :d search term     -> DuckDuckGo"
@@ -195,7 +211,7 @@ echo "  :gn search term    -> Google News"
 echo "  :gm search term    -> Google Maps"
 
 if [[ -n "$SEARXNG_URL" ]]; then
-    echo "  :sx search term    -> SearXNG"
+    echo "  :sx search term    -> SearXNG (default)"
     echo "  :sxi search term   -> SearXNG Images"
     echo "  :sxn search term   -> SearXNG News" 
     echo "  :sxv search term   -> SearXNG Videos"

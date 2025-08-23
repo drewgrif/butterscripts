@@ -101,6 +101,7 @@ else
     echo "Skipping SearXNG setup"
 fi
 
+
 # Create policy directory if it doesn't exist
 sudo mkdir -p "$POLICY_DIR"
 

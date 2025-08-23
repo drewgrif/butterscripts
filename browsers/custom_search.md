@@ -26,11 +26,12 @@ The `custom_search.sh` script automates adding custom search engines to Firefox/
 
 | Shortcut | Search Engine | Description |
 |----------|--------------|-------------|
+| `:b` | Brave Search | Privacy-focused search |
+| `:d` | DuckDuckGo | Privacy-focused search |
 | `:gw` | Google Web | Clean text-only results (no AI/widgets) |
 | `:gi` | Google Images | Image search |
 | `:gn` | Google News | News search |
 | `:gm` | Google Maps | Maps/location search |
-| `:ddg` | DuckDuckGo | Privacy-focused search |
 | `:sx` | SearXNG | Privacy metasearch (optional) |
 | `:sxi` | SearXNG Images | Image metasearch (optional) |
 | `:sxn` | SearXNG News | News metasearch (optional) |
@@ -44,11 +45,12 @@ The `custom_search.sh` script automates adding custom search engines to Firefox/
 4. **Press Enter**
 
 ### Examples:
+- `:b privacy guide` → Searches Brave Search for "privacy guide"
+- `:d linux tutorial` → Searches DuckDuckGo for "linux tutorial"
 - `:gw linux kernel` → Searches Google Web for "linux kernel" 
 - `:gi sunset wallpaper` → Searches Google Images for "sunset wallpaper"
 - `:gm pizza near me` → Searches Google Maps for "pizza near me"
-- `:ddg privacy tools` → Searches DuckDuckGo for "privacy tools"
-- Just type normally → Uses your default (ideally DuckDuckGo or self-hosted SearXNG)
+- Just type normally → Uses your default (ideally DuckDuckGo, Brave, or self-hosted SearXNG)
 
 The `:` prefix makes it feel like entering command mode in vim - quick and distinctive from regular typing.
 
@@ -74,7 +76,7 @@ The `:` prefix makes it feel like entering command mode in vim - quick and disti
 
 4. **To set keywords**:
    - Double-click the "Keyword" column for each engine
-   - Enter shortcuts like `:gw`, `:ddg`, etc. (the `:` prefix mimics vim command mode)
+   - Enter shortcuts like `:gw`, `:d`, `:b`, etc. (the `:` prefix mimics vim command mode)
 
 5. **To remove engines**:
    - Select the engine
@@ -86,6 +88,7 @@ The `:` prefix makes it feel like entering command mode in vim - quick and disti
 
 ### The Search URLs You'd Want:
 
+- **Brave Search**: `https://search.brave.com/search?q=%s` (privacy-focused)
 - **DuckDuckGo**: `https://duckduckgo.com/?q=%s` (RECOMMENDED as default)
 - **Google Web (clean)**: `https://www.google.com/search?udm=14&q=%s`
 - **Google Images**: `https://www.google.com/search?udm=2&q=%s`
