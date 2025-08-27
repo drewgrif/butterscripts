@@ -1,6 +1,10 @@
 #!/bin/bash
 # DESC: Configure custom search engines in Firefox using policies.json
-# Automated Firefox Search Engine Setup using policies.json
+# Sets up privacy-focused search engines with keyboard shortcuts
+# Removes default engines (Google, Bing, Wikipedia, Amazon, eBay, DuckDuckGo)
+# Adds: Brave (:b), DuckDuckGo (:d), Google variants (:gw, :gi, :gn, :gm), and optional SearXNG (:sx)
+# Supports local HTTP SearXNG instances (auto-detects localhost/private IPs)
+# To reset: delete /usr/lib/firefox-esr/distribution/policies.json and restart Firefox
 
 set -e
 
@@ -64,12 +68,23 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
             echo "Using public instance: $SEARXNG_URL"
             ;;
         2)
-            echo "Enter your SearXNG instance URL (e.g., https://searx.example.com):"
+            echo "Enter your SearXNG instance URL (e.g., https://searx.example.com or http://192.168.1.100:8888):"
             read -r SEARXNG_URL
             # Clean up URL
             SEARXNG_URL="${SEARXNG_URL%/}"  # Remove trailing slash
+            
+            # Check if URL has protocol
             if [[ ! "$SEARXNG_URL" =~ ^https?:// ]]; then
-                SEARXNG_URL="https://$SEARXNG_URL"
+                # Check if it looks like a local/private IP or localhost
+                if [[ "$SEARXNG_URL" =~ ^(localhost|127\.|10\.|172\.(1[6-9]|2[0-9]|3[0-1])\.|192\.168\.) ]]; then
+                    SEARXNG_URL="http://$SEARXNG_URL"
+                    echo "⚠️  Using HTTP for local instance. Note: Firefox may block HTTP search on HTTPS sites."
+                else
+                    SEARXNG_URL="https://$SEARXNG_URL"
+                fi
+            elif [[ "$SEARXNG_URL" =~ ^http:// ]]; then
+                echo "⚠️  Warning: Using HTTP protocol. Firefox may block HTTP search on HTTPS sites."
+                echo "    This may not work properly unless Firefox is configured to allow mixed content."
             fi
             echo "Using custom instance: $SEARXNG_URL"
             ;;
@@ -88,30 +103,6 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
           \"IconURL\": \"$SEARXNG_URL/favicon.ico\",
           \"Alias\": \":sx\",
           \"Description\": \"SearXNG Privacy Search\"
-        },
-        {
-          \"Name\": \"SearXNG Images\",
-          \"URLTemplate\": \"$SEARXNG_URL/search?q={searchTerms}&categories=images\",
-          \"Method\": \"GET\", 
-          \"IconURL\": \"$SEARXNG_URL/favicon.ico\",
-          \"Alias\": \":sxi\",
-          \"Description\": \"SearXNG Image Search\"
-        },
-        {
-          \"Name\": \"SearXNG News\",
-          \"URLTemplate\": \"$SEARXNG_URL/search?q={searchTerms}&categories=news\",
-          \"Method\": \"GET\",
-          \"IconURL\": \"$SEARXNG_URL/favicon.ico\", 
-          \"Alias\": \":sxn\",
-          \"Description\": \"SearXNG News Search\"
-        },
-        {
-          \"Name\": \"SearXNG Videos\",
-          \"URLTemplate\": \"$SEARXNG_URL/search?q={searchTerms}&categories=videos\",
-          \"Method\": \"GET\",
-          \"IconURL\": \"$SEARXNG_URL/favicon.ico\",
-          \"Alias\": \":sxv\", 
-          \"Description\": \"SearXNG Video Search\"
         }"
         echo "✅ SearXNG engines configured for: $SEARXNG_URL"
     fi
@@ -136,7 +127,7 @@ sudo tee "$DIST_DIR/policies.json" > /dev/null << EOF
 {
   "policies": {
     "SearchEngines": {
-      "Remove": ["Google", "Bing", "Wikipedia", "Amazon.com", "eBay"],
+      "Remove": ["Google", "Bing", "Wikipedia (en)", "Amazon.com", "eBay", "DuckDuckGo"],
       ${DEFAULT_SEARCH:+"\"Default\": \"$DEFAULT_SEARCH\","}
       "Add": [
         {
@@ -212,9 +203,6 @@ echo "  :gm search term    -> Google Maps"
 
 if [[ -n "$SEARXNG_URL" ]]; then
     echo "  :sx search term    -> SearXNG (default)"
-    echo "  :sxi search term   -> SearXNG Images"
-    echo "  :sxn search term   -> SearXNG News" 
-    echo "  :sxv search term   -> SearXNG Videos"
 fi
 
 echo ""

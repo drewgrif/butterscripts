@@ -4,7 +4,7 @@
 
 The `custom_search.sh` script automates adding custom search engines to Firefox/Firefox ESR by creating a `policies.json` file. This configures:
 
-- **Removes** default search engines (Google, Bing, Wikipedia, Amazon, eBay)
+- **Removes** default search engines (Google, Bing, Wikipedia, Amazon, eBay, DuckDuckGo)
 - **Adds** privacy-focused alternatives with keyboard shortcuts
 - **Configures** Google searches to use clean `udm` parameters (no AI summaries)
 - **Optionally sets up** SearXNG metasearch engine
@@ -20,7 +20,9 @@ The `custom_search.sh` script automates adding custom search engines to Firefox/
 
 **For most users: Set DuckDuckGo as your default** - It's private, no tracking, and works immediately.
 
-**For advanced users: Self-host SearXNG** on TrueNAS Scale or similar for maximum privacy and control. When running the script, choose option 2 for custom instance and enter your self-hosted URL.
+**For advanced users: Self-host SearXNG** on TrueNAS Scale or similar for maximum privacy and control. When running the script, choose option 2 for custom instance and enter your self-hosted URL:
+- Local network: `http://192.168.1.100:8888`
+- Custom domain: `https://search.justaguylinux.com`
 
 ## Configured Shortcuts
 
@@ -33,9 +35,6 @@ The `custom_search.sh` script automates adding custom search engines to Firefox/
 | `:gn` | Google News | News search |
 | `:gm` | Google Maps | Maps/location search |
 | `:sx` | SearXNG | Privacy metasearch (optional) |
-| `:sxi` | SearXNG Images | Image metasearch (optional) |
-| `:sxn` | SearXNG News | News metasearch (optional) |
-| `:sxv` | SearXNG Videos | Video metasearch (optional) |
 
 ## How to Use Search Shortcuts in the Omnibar
 
@@ -94,10 +93,41 @@ The `:` prefix makes it feel like entering command mode in vim - quick and disti
 - **Google Images**: `https://www.google.com/search?udm=2&q=%s`
 - **Google News**: `https://www.google.com/search?udm=12&q=%s`
 - **Google Maps**: `https://www.google.com/maps/search/%s`
-- **Self-hosted SearXNG**: `http://YOUR-SERVER-IP:PORT/search?q=%s` (for advanced users)
+- **Self-hosted SearXNG**: 
+  - Local: `http://192.168.1.100:8888/search?q=%s`
+  - Custom domain: `https://search.yourdomain.com/search?q=%s`
 
 Note: `%s` is the search term placeholder in Firefox.
 
 ### What the Script Automates:
 
 Instead of manually adding each engine through Settings, the script creates a system-wide policy file that automatically configures all search engines at once, including removing unwanted defaults and setting up keyboard shortcuts - essentially doing all the above steps programmatically on every Firefox restart.
+
+## How to Reset to Default Search Engines
+
+If you want to restore Firefox's original search engines:
+
+1. **Quick method**: Delete the policies file
+   ```bash
+   sudo rm /usr/lib/firefox-esr/distribution/policies.json
+   # or
+   sudo rm /etc/firefox-esr/policies.json
+   ```
+   Then restart Firefox.
+
+2. **Through Firefox Settings**:
+   - Go to Settings → Search
+   - Click "Restore Default Search Engines" button
+   - Remove custom engines via the three-dot menu
+
+## SearXNG Instance Options
+
+The script supports various SearXNG configurations:
+
+1. **Public instance**: Uses searx.be (default option 1)
+2. **Local network instance**: Auto-detects private IPs and uses HTTP
+   - Example: `http://192.168.1.100:30053`
+3. **Custom domain via Cloudflare/reverse proxy**: Uses HTTPS
+   - Example: `https://search.justaguylinux.com`
+
+**Note**: For local HTTP instances, Firefox may block searches when on HTTPS sites due to mixed content restrictions. Custom domains with HTTPS work seamlessly.
