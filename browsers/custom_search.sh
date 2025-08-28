@@ -115,7 +115,7 @@ if [[ -n "$SEARXNG_URL" ]]; then
     DEFAULT_SEARCH="SearXNG"
     echo "Setting SearXNG as default search engine..."
 else
-    DEFAULT_SEARCH="DuckDuckGo"
+    DEFAULT_SEARCH="DuckDuckGo Search"
     echo "Setting DuckDuckGo as default search engine..."
 fi
 
@@ -139,12 +139,12 @@ sudo tee "$DIST_DIR/policies.json" > /dev/null << EOF
           "Description": "Brave Privacy Search"
         },
         {
-          "Name": "DuckDuckGo",
+          "Name": "DuckDuckGo Search",
           "URLTemplate": "https://duckduckgo.com/?q={searchTerms}",
           "Method": "GET",
           "IconURL": "https://duckduckgo.com/favicon.ico",
           "Alias": ":d", 
-          "Description": "DuckDuckGo Search"
+          "Description": "DuckDuckGo Privacy Search"
         },
         {
           "Name": "Google Web",
