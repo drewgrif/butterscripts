@@ -104,6 +104,12 @@ Thanks to all contributors and the open source community for inspiration and cod
 
 ---
 
+## ☕ Support
+
+If these scripts have been helpful, consider buying me a coffee:
+
+<a href="https://www.buymeacoffee.com/justaguylinux" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy me a coffee" /></a>
+
 ## 📫 Author
 
 **JustAGuy Linux**  
