@@ -1,6 +1,8 @@
 # 🧈 butterscripts
 ![Made for Debian](https://img.shields.io/badge/Made%20for-Debian-A81D33?style=for-the-badge&logo=debian&logoColor=white)
 
+> **📍 Also Available on Codeberg**: This project is maintained on both [GitHub](https://github.com/drewgrif/butterscripts) and [Codeberg](https://codeberg.org/justaguylinux/butterscripts). Both repositories are actively maintained and kept in sync.
+
 A modular collection of scripts I use across my Debian setups — minimal and practical. These scripts automate installs, configure tools, apply theming, and tweak the system just how I like it.
 
 ---
