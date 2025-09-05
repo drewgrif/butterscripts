@@ -60,7 +60,7 @@ config.window_frame = {
 -- Performance settings
 config.max_fps = 120
 config.animation_fps = 1
-config.window_background_opacity = 0.95
+config.window_background_opacity = 0.98
 config.enable_scroll_bar = false
 config.use_fancy_tab_bar = true
 config.term = "xterm-256color"
