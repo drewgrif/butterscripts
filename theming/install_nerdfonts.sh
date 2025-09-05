@@ -37,6 +37,7 @@ fonts=(
     "JetBrainsMono"
     "FiraCode"
     "Hack"
+    "Lilex"
     "CascadiaCode"
     "SourceCodePro"
     "RobotoMono"
@@ -49,7 +50,7 @@ fonts=(
 )
 
 # Font version and directories
-FONT_VERSION="v3.3.0"
+FONT_VERSION="v3.4.0"
 FONTS_DIR="$HOME/.local/share/fonts"
 TEMP_DIR="/tmp/nerdfonts_install_$$" # Using PID to avoid conflicts
 
