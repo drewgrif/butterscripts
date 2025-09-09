@@ -44,7 +44,7 @@ for i = 0, 7 do table.insert(config.keys, {mods="CTRL|ALT", key=tostring(i+1), a
 
 -- Font configuration
 config.font = wezterm.font_with_fallback({
-  {family='Lilex', weight='Regular'},  
+  {family='Lilex Nerd Font Mono', weight='Regular'},  
   {family='SauceCodePro Nerd Font Mono', weight='Regular'},
   {family='FiraCode Nerd Font Mono', weight='Regular'},
   {family='Symbols Nerd Font Mono', weight='Regular'}
@@ -52,7 +52,7 @@ config.font = wezterm.font_with_fallback({
 config.font_size = 16
 config.line_height = 1.1
 config.window_frame = {
-  font = wezterm.font{family='FiraCode Nerd Font Mono', weight='Regular'},
+  font = wezterm.font{family='Lilex Nerd Font Mono', weight='Regular', style='Italic'},
   font_size = 12.0,
   active_titlebar_bg = colors.bg
 }
